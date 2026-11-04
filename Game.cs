@@ -1,13 +1,21 @@
 // public class Game {
-//     public string Z;
-//     public int H;
-//     public int O;
-//     public int T;
+//     public string Title;
+//     public string Genre;
+//     public int ReleaseYear;
+//     public double Rating;
+//     public int HoursPlayed;
+//     public Game(string title, string genre, int releaseYear, double rating) {
+//         Title = title;
+//         Genre = genre;
+//         ReleaseYear = releaseYear;
+//         Rating = rating;
+//         HoursPlayed = 0;
+//     }
+//     public void AddHours(int hours) {
+//         if (hours <= 0) {
+//             return;
+//         }
 
-//     public Game(string name, int zap) {
-//         Z = name;
-//         H = zap;
-//         O = 1;
-//         T = 0;
+//         HoursPlayed += hours;
 //     }
 // }
