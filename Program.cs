@@ -66,14 +66,25 @@
 // Console.WriteLine(anastasia.GetInfo());
 // Console.WriteLine();
 // Console.WriteLine(artem.GetInfo());
+
+// "Game.cs"
 // Game game1 = new Game("Ведьмак 3", "RPG", 2015, 9.8);
 // Game game2 = new Game("Minecraft", "Sandbox", 2011, 9.5);
 // Game game3 = new Game("DOOM Eternal", "Shooter", 2020, 8.7);
-// Console.WriteLine($"Часы игры до вызова: {game1.HoursPlayed}");
+
+// Console.WriteLine($"game1 до действий: {game1.HoursPlayed}");
+
 // game1.AddHours(12);
-// Console.WriteLine($"После допустимого вызова: {game1.HoursPlayed}");
+// Console.WriteLine($"После допустимого (12): {game1.HoursPlayed}");
+
 // game1.AddHours(-3);
-// Console.WriteLine($"После недопустимого вызова: {game1.HoursPlayed}");
+// Console.WriteLine($"После недопустимого (-3): {game1.HoursPlayed}");
+
+// game1.AddHours(20000);
+// Console.WriteLine($"После 20000: {game1.HoursPlayed} (потолок 10000)");
+
+// Console.WriteLine($"game2 без изменений: {game2.HoursPlayed}");
+
 Hero yaroslav = new Hero("Ярослав", 100);
 Hero anastasia = new Hero("Анастасия", 90);
 Hero artem = new Hero("Артём", 120);
@@ -91,3 +102,4 @@ Hero healthProbe = new Hero("Проверка конструктора", -100);
 Console.WriteLine($"После создания: {healthProbe.Health}");
 alexander.Heal(5000);
 Console.WriteLine($"После большого лечения: {alexander.Health}");
+
