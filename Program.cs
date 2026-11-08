@@ -71,49 +71,50 @@
 // Console.WriteLine(artem.GetInfo());
 
 // "Game.cs" !!!!
+
 // Game game1 = new Game("Ведьмак 3", "RPG", 2015, 9.8);
 // Game game2 = new Game("Minecraft", "Sandbox", 2011, 9.5);
 // Game game3 = new Game("DOOM Eternal", "Shooter", 2020, 8.7);
 
-// List<Game> games = new List<Game>();
-// games.Add(game1);
-// games.Add(game2);
-// games.Add(game3);
+// GameCatalog catalog = new GameCatalog("Каталог игр");
 
-// Console.WriteLine($">>> Каталог игр <<<");
-// Console.WriteLine($"Игр в списке: {games.Count}");
+// Console.WriteLine($">>> {catalog.Name} <<<");
+// Console.WriteLine($"Игр до добавления: {catalog.GameCount}");
 
-// if (games.Count > 0) {
-//     Console.WriteLine($"Первая: {games[0].Title}");
-//     Console.WriteLine($"Последняя: {games[games.Count - 1].Title}");
+// Console.WriteLine($"Принят Ведьмак 3: {catalog.AddGame(game1)}");
+// Console.WriteLine($"Принят Minecraft: {catalog.AddGame(game2)}");
+// Console.WriteLine($"Принят DOOM Eternal: {catalog.AddGame(game3)}");
+
+// Game duplicate = new Game(" ведьмак 3 ", "RPG", 2015, 9.8);
+// Console.WriteLine($"Повтор ведьмак 3 принят: {catalog.AddGame(duplicate)}");
+
+// Game? found = catalog.FindByTitle(" MINECRAFT ");
+// if (found != null) {
+//     Console.WriteLine($"Найден: {found.Title}");
+// } else {
+//     Console.WriteLine("Minecraft не найден.");
 // }
 
-// Console.WriteLine();
-// foreach (Game game in games) {
-//     Console.WriteLine($"{game.Title} ({game.Genre}, {game.ReleaseYear}) — рейтинг {game.Rating}, часов: {game.HoursPlayed}");
-//     Console.WriteLine();
+// Game? notFound = catalog.FindByTitle("Hades");
+// if (notFound != null) {
+//     Console.WriteLine($"Найден: {notFound.Title}");
+// } else {
+//     Console.WriteLine("Hades не найден.");
 // }
 
-// Game game4 = new Game("Hades", "Roguelike", 2020, 9.3);
-// games.Add(game4);
+// Console.WriteLine($"Удалён Minecraft: {catalog.RemoveGame("minecraft")}");
+// Console.WriteLine($"Удалён отсутствующий Hades: {catalog.RemoveGame("Hades")}");
+// Console.WriteLine($"Игр после изменений: {catalog.GameCount}");
 
-// Console.WriteLine($"После добавления: {games.Count}");
-// foreach (Game game in games) {
-//     Console.WriteLine($"{game.Title} - часов: {game.HoursPlayed}");
-// }
-
-// int highRatedCount = 0;
-// foreach (Game game in games) {
-//     if (game.Rating >= 9.5) {
-//         highRatedCount += 1;
-//     }
-// }
-// Console.WriteLine($"Игр с рейтингом от 9.5: {highRatedCount}");
+// Console.WriteLine($"Игр с рейтингом от 9.5: {catalog.CountHighlyRated(9.5)}");
 
 // game1.AddHours(25);
-
-// Console.WriteLine($"game1 через переменную: {game1.HoursPlayed}");
-// Console.WriteLine($"game1 через список: {games[0].HoursPlayed}");
+// List<Game> games = catalog.GetGames();
+// foreach (Game game in games) {
+//     if (game.Title == "Ведьмак 3") {
+//         Console.WriteLine($"Ведьмак 3 через каталог: {game.HoursPlayed} часов");
+//     }
+// }
 
 Hero yaroslav = new Hero("Ярослав", 100);
 Hero anastasia = new Hero("Анастасия", 90);
@@ -121,51 +122,48 @@ Hero artem = new Hero("Артём", 120);
 Hero alexander = new Hero("   Александр   ", 150);
 Hero sergey = new Hero("Сергей", 110);
 
-
 Guild guild = new Guild("Гильдия героев");
 
-guild.Heroes.Add(yaroslav);
-guild.Heroes.Add(anastasia);
-guild.Heroes.Add(artem);
-guild.Heroes.Add(alexander);
-guild.Heroes.Add(sergey);
+guild.AddHero(yaroslav);
+guild.AddHero(anastasia);
+guild.AddHero(artem);
+guild.AddHero(alexander);
+guild.AddHero(sergey);
 
+
+List<Hero> members = guild.GetMembers();
 
 Console.WriteLine($">>> {guild.Name}: перекличка <<<");
-Console.WriteLine($"Участников: {guild.Heroes.Count}");
+Console.WriteLine($"Участников: {guild.MemberCount}");
 
-if (guild.Heroes.Count > 0)
+if (members.Count > 0)
 {
-    Console.WriteLine($"Первый: {guild.Heroes[0].Name}");
-    Console.WriteLine($"Последний: {guild.Heroes[guild.Heroes.Count - 1].Name}");
+    Console.WriteLine($"Первый: {members[0].Name}");
+    Console.WriteLine($"Последний: {members[members.Count - 1].Name}");
 }
 
 Console.WriteLine();
-foreach (Hero hero in guild.Heroes)
+foreach (Hero hero in members)
 {
     Console.WriteLine(hero.GetInfo());
     Console.WriteLine();
 }
 
-int strongCount = 0;
-foreach (Hero hero in guild.Heroes)
-{
-    if (hero.Health >= 120)
-    {
-        strongCount += 1;
-    }
-}
-Console.WriteLine($"Могут нести тяжёлые ящики (здоровье от 120): {strongCount}");
+Console.WriteLine($"Могут нести тяжёлые ящики (здоровье от 120): {guild.CountHealthy(120)}");
 
-if (guild.Heroes.Count > 0)
-{
-    Hero strongest = guild.Heroes[0];
-    foreach (Hero hero in guild.Heroes)
-    {
-        if (hero.Health > strongest.Health)
-        {
-            strongest = hero;
-        }
-    }
+Hero? strongest = guild.FindStrongest();
+if (strongest != null) {
     Console.WriteLine($"Самый здоровый: {strongest.Name} ({strongest.Health})");
 }
+Hero? found = guild.FindHeroByName(" аРтЁм ");
+if (found != null)
+{
+    Console.WriteLine($"Найден по запросу « аРтЁм »: {found.Name}");
+}
+else
+{
+    Console.WriteLine("По запросу « аРтЁм » никого нет.");
+}
+Console.WriteLine($"Повтор Александра принят: {guild.AddHero(alexander)}");
+Console.WriteLine($"Удалён отсутствующий: {guild.RemoveHero("Борис")}");
+Console.WriteLine($"Участников после проверок: {guild.MemberCount}");
