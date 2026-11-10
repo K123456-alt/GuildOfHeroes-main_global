@@ -74,48 +74,38 @@
 
 // Game game1 = new Game("Ведьмак 3", "RPG", 2015, 9.8);
 // Game game2 = new Game("Minecraft", "Sandbox", 2011, 9.5);
-// Game game3 = new Game("DOOM Eternal", "Shooter", 2020, 8.7);
 
 // GameCatalog catalog = new GameCatalog("Каталог игр");
+// catalog.AddGame(game1);
+// catalog.AddGame(game2);
 
-// Console.WriteLine($">>> {catalog.Name} <<<");
-// Console.WriteLine($"Игр до добавления: {catalog.GameCount}");
+// Console.WriteLine($">>> {catalog.Name}: {catalog.GameCount} игр <<<");
 
-// Console.WriteLine($"Принят Ведьмак 3: {catalog.AddGame(game1)}");
-// Console.WriteLine($"Принят Minecraft: {catalog.AddGame(game2)}");
-// Console.WriteLine($"Принят DOOM Eternal: {catalog.AddGame(game3)}");
+// GameSession session = new GameSession(1, "Вечерняя сессия", 25);
 
-// Game duplicate = new Game(" ведьмак 3 ", "RPG", 2015, 9.8);
-// Console.WriteLine($"Повтор ведьмак 3 принят: {catalog.AddGame(duplicate)}");
+// Console.WriteLine($"Старт для Ведьмака: {session.TryStart(game1)}");
+// Console.WriteLine($"Старт повторно: {session.TryStart(game2)}");
+// Game? current = session.AssignedGame;
+// if (current != null) {
+//     Console.WriteLine($"Игра в сессии: {current.Title}");
+// }
+// Console.WriteLine($"Ведьмак 3 до завершения: {game1.HoursPlayed} часов");
 
-// Game? found = catalog.FindByTitle(" MINECRAFT ");
+// Console.WriteLine($"Завершение: {session.TryFinish()}");
+// Console.WriteLine($"Ведьмак 3 после завершения: {game1.HoursPlayed} часов");
+
+// Console.WriteLine($"Повторное завершение: {session.TryFinish()}");
+// Console.WriteLine($"Ведьмак 3 после повтора: {game1.HoursPlayed} часов");
+
+// Game? found = catalog.FindByTitle(" ведьмак 3 ");
 // if (found != null) {
-//     Console.WriteLine($"Найден: {found.Title}");
+//     Console.WriteLine($"Через каталог: {found.Title} — {found.HoursPlayed} часов");
 // } else {
-//     Console.WriteLine("Minecraft не найден.");
+//     Console.WriteLine("Ведьмак 3 не найден в каталоге.");
 // }
 
-// Game? notFound = catalog.FindByTitle("Hades");
-// if (notFound != null) {
-//     Console.WriteLine($"Найден: {notFound.Title}");
-// } else {
-//     Console.WriteLine("Hades не найден.");
-// }
-
-// Console.WriteLine($"Удалён Minecraft: {catalog.RemoveGame("minecraft")}");
-// Console.WriteLine($"Удалён отсутствующий Hades: {catalog.RemoveGame("Hades")}");
-// Console.WriteLine($"Игр после изменений: {catalog.GameCount}");
-
-// Console.WriteLine($"Игр с рейтингом от 9.5: {catalog.CountHighlyRated(9.5)}");
-
-// game1.AddHours(25);
-// List<Game> games = catalog.GetGames();
-// foreach (Game game in games) {
-//     if (game.Title == "Ведьмак 3") {
-//         Console.WriteLine($"Ведьмак 3 через каталог: {game.HoursPlayed} часов");
-//     }
-// }
-
+Console.WriteLine();
+// Console.WriteLine(session.GetInfo());
 Hero yaroslav = new Hero("Ярослав", 100);
 Hero anastasia = new Hero("Анастасия", 90);
 Hero artem = new Hero("Артём", 120);
@@ -129,41 +119,46 @@ guild.AddHero(anastasia);
 guild.AddHero(artem);
 guild.AddHero(alexander);
 guild.AddHero(sergey);
+Console.WriteLine($">>> {guild.Name}: участников {guild.MemberCount} <<<");
+Console.WriteLine();
+QuestBoard board = new QuestBoard(guild);
 
+Quest floatQuest = new Quest(101, "Вернуть поплавок", 100, 30);
+Console.WriteLine($"Поручение добавлено: {board.AddQuest(floatQuest)}");
+Console.WriteLine($">>> №{floatQuest.Id}: {floatQuest.Title} <<<");
 
-List<Hero> members = guild.GetMembers();
-
-Console.WriteLine($">>> {guild.Name}: перекличка <<<");
-Console.WriteLine($"Участников: {guild.MemberCount}");
-
-if (members.Count > 0)
-{
-    Console.WriteLine($"Первый: {members[0].Name}");
-    Console.WriteLine($"Последний: {members[members.Count - 1].Name}");
+Console.WriteLine($"Назначение Сергея: {board.TryAssign(101, " сЕрГеЙ ")}");
+Hero? assigned = floatQuest.AssignedHero;
+if (assigned != null) {
+    Console.WriteLine($"Исполнитель: {assigned.Name}");
 }
+Console.WriteLine($"Опыт после назначения: {sergey.Experience}");
+
+Console.WriteLine($"Завершение: {board.TryComplete(101)}");
+Console.WriteLine($"Опыт после завершения: {sergey.Experience}");
+Console.WriteLine($"Повторное завершение: {board.TryComplete(101)}");
+Console.WriteLine($"Опыт после повтора: {sergey.Experience}");
+
+
+
+Guild traceGuild = new Guild("Трассировка");
+Hero anya = new Hero("Аня", 120);
+traceGuild.AddHero(anya);
+
+QuestBoard traceBoard = new QuestBoard(traceGuild);
+Quest first = new Quest(1, "Первое", 100, 10);
+Quest second = new Quest(2, "Второе", 130, 20);
+traceBoard.AddQuest(first);
+traceBoard.AddQuest(second);
+
+Console.WriteLine(traceBoard.TryAssign(2, "аня"));
+Console.WriteLine(traceBoard.TryAssign(1, "аня"));
+Console.WriteLine(traceBoard.TryComplete(2));
+Console.WriteLine(traceBoard.TryComplete(1));
+Console.WriteLine(traceBoard.TryComplete(1));
+Console.WriteLine(anya.Experience);
+Console.WriteLine(second.AssignedHero == null);
 
 Console.WriteLine();
-foreach (Hero hero in members)
-{
-    Console.WriteLine(hero.GetInfo());
-    Console.WriteLine();
-}
-
-Console.WriteLine($"Могут нести тяжёлые ящики (здоровье от 120): {guild.CountHealthy(120)}");
-
-Hero? strongest = guild.FindStrongest();
-if (strongest != null) {
-    Console.WriteLine($"Самый здоровый: {strongest.Name} ({strongest.Health})");
-}
-Hero? found = guild.FindHeroByName(" аРтЁм ");
-if (found != null)
-{
-    Console.WriteLine($"Найден по запросу « аРтЁм »: {found.Name}");
-}
-else
-{
-    Console.WriteLine("По запросу « аРтЁм » никого нет.");
-}
-Console.WriteLine($"Повтор Александра принят: {guild.AddHero(alexander)}");
-Console.WriteLine($"Удалён отсутствующий: {guild.RemoveHero("Борис")}");
-Console.WriteLine($"Участников после проверок: {guild.MemberCount}");
+Console.WriteLine(floatQuest.GetInfo());
+Console.WriteLine(sergey.GetInfo());
