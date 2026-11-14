@@ -3,7 +3,7 @@
 //     public string Title { get; private set; }
 //     public int Hours { get; private set; }
 //     public Game? AssignedGame { get; private set; }
-//     public bool IsCompleted { get; private set; }
+//     public GameSessionStatus Status { get; private set; }
 
 //     public GameSession(int id, string title, int hours) {
 //         Id = id;
@@ -20,14 +20,11 @@
 //         }
 
 //         AssignedGame = null;
-//         IsCompleted = false;
+//         Status = GameSessionStatus.Open;
 //     }
 
 //     public bool TryStart(Game game) {
-//         if (IsCompleted) {
-//             return false;
-//         }
-//         if (AssignedGame != null) {
+//         if (Status != GameSessionStatus.Open) {
 //             return false;
 //         }
 //         if (game.HoursPlayed + Hours > 10000) {
@@ -35,11 +32,12 @@
 //         }
 
 //         AssignedGame = game;
+//         Status = GameSessionStatus.Active;
 //         return true;
 //     }
 
 //     public bool TryFinish() {
-//         if (IsCompleted) {
+//         if (Status != GameSessionStatus.Active) {
 //             return false;
 //         }
 
@@ -52,8 +50,32 @@
 //         }
 
 //         game.AddHours(Hours);
-//         IsCompleted = true;
+//         Status = GameSessionStatus.Completed;
 //         return true;
+//     }
+
+//     public bool TryCancel() {
+//         if (Status != GameSessionStatus.Open && Status != GameSessionStatus.Active) {
+//             return false;
+//         }
+
+//         Status = GameSessionStatus.Cancelled;
+//         return true;
+//     }
+
+//     public string GetStatusText() {
+//         switch (Status) {
+//             case GameSessionStatus.Open:
+//                 return "открыта";
+//             case GameSessionStatus.Active:
+//                 return "активна";
+//             case GameSessionStatus.Completed:
+//                 return "выполнена";
+//             case GameSessionStatus.Cancelled:
+//                 return "отменена";
+//             default:
+//                 return "неизвестно";
+//         }
 //     }
 
 //     public string GetInfo() {
@@ -62,11 +84,6 @@
 //             gameText = AssignedGame.Title;
 //         }
 
-//         string doneText = "нет";
-//         if (IsCompleted) {
-//             doneText = "да";
-//         }
-
-//         return $"№{Id} «{Title}»: игра {gameText}, выполнено: {doneText}";
+//         return $"№{Id} «{Title}»: {GetStatusText()}, игра {gameText}";
 //     }
 // }
